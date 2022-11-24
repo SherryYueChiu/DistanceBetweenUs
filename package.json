@@ -4,5 +4,12 @@
   "version": "3.6.2",
   "creator": {
     "version": "3.6.2"
+  },
+  "dependencies": {
+    "gh-pages": "^4.0.0"
+  },
+  "homepage": "https://sherryyuechiu.github.io/DistanceBetweenUs",
+  "scripts": {
+    "deploy": "gh-pages -d build/web-mobile"
   }
 }
