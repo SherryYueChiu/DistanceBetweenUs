@@ -51,17 +51,17 @@ export class MachResult extends Component {
     if (distance < 25000) {
       // 很近
       this.label_title.string = `你跟${appellation}只距離`;
-      this.label_distanceMsg.string = `${Math.round(distance / 1000)}km!`
+      this.label_distanceMsg.string = `${this.getDistanceText(distance)}!`
       this.label_hint.string = `你們距離很近耶，怎麼還不約起來`;
     } else if (distance > 400000) {
       // VPN
       this.label_title.string = `你跟${appellation}距離了`;
-      this.label_distanceMsg.string = `超過${Math.round(distance / 1000)}km!`
+      this.label_distanceMsg.string = `超過${this.getDistanceText(distance)}!`
       this.label_hint.string = `不曉得你們是在異地還是開了VPN，久久還是要記得約一下噢`;
     } else {
       this.label_title.string = `你跟${appellation}距離了`;
-      this.label_distanceMsg.string = `${Math.round(distance / 1000)}km!`
-      this.label_hint.string = `好像有點距離，好像該約一下了`;
+      this.label_distanceMsg.string = `${this.getDistanceText(distance)}!`
+      this.label_hint.string = `好像有點距離，偶爾記得約一下吶`;
     }
   }
 
@@ -92,6 +92,11 @@ export class MachResult extends Component {
     }, function () {
       that.showWarning('A01', '找不到GPS訊號\n可能是瀏覽器不給予權限');
     });
+  }
+
+  getDistanceText(distance: number) {
+    if (distance > 1000) return `${Math.round(distance / 1000)}km`;
+    else return `{Math.round(distance % 1000)}m`;
   }
 
   calcDistance(): number {
