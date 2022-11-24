@@ -1,4 +1,4 @@
-import { Component, EditBox, Label, _decorator } from "cc";
+import { Component, EditBox, Label, Node, _decorator } from "cc";
 const { ccclass, property } = _decorator
 
 @ccclass('CreateOwn')
@@ -7,6 +7,10 @@ export class CreateOwn extends Component {
   input_enterAppellation: EditBox | null = null;
   @property(Label)
   label_sharelink: Label | null = null;
+  @property(Node)
+  node_warning: Node | null = null;
+  @property(Node)
+  node_alert: Node | null = null;
 
   myLat: number = null;
   myLng: number = null;
@@ -26,16 +30,18 @@ export class CreateOwn extends Component {
       return;
     }
     let url = new URL(window.location.href);
+    let encryptedPosition = btoa(`${this.myLat},${this.myLng}`);
     let param = new URLSearchParams({
-      zwbyu: `${this.myLat},${this.myLng}`,
+      zwbyu: encryptedPosition,
       cnhu: this.input_enterAppellation.string || '他'
     });
     url.search = param.toString();
     this.label_sharelink.string = url.toString();
     // copy to clipboard
+    let that = this;
     navigator.clipboard.writeText(url.toString()).then(function () {
       console.log('Async: Copying to clipboard was successful!');
-      alert('分享連結已經起來')
+      that.showAlert('OK', '分享連結已經複製起來了')
     }, function (err) {
       console.error('Async: Could not copy text: ', err);
     });
@@ -55,13 +61,25 @@ export class CreateOwn extends Component {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
       if (!lat && !lng) {
-        alert("找不到GPS訊號");
+        that.showWarning('A02', '找不到GPS訊號');
       } else {
         that.myLat = lat;
         that.myLng = lng;
       }
     }, function () {
-      alert("找不到GPS訊號");
+      that.showWarning('A01', '找不到GPS訊號\n可能是瀏覽器不給予權限');
     });
+  }
+
+  showAlert(title: string, msg: string) {
+    this.node_alert.active = true;
+    this.node_alert.getChildByName('title').getComponent(Label).string = title;
+    this.node_alert.getChildByName('msg').getComponent(Label).string = msg;
+  }
+
+  showWarning(errorCode: string, msg: string) {
+    this.node_warning.active = true;
+    this.node_warning.getChildByName('errorCode').getComponent(Label).string = `ERR${errorCode}`;
+    this.node_warning.getChildByName('msg').getComponent(Label).string = msg;
   }
 }

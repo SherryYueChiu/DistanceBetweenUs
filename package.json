@@ -10,6 +10,7 @@
   },
   "homepage": "https://sherryyuechiu.github.io/DistanceBetweenUs",
   "scripts": {
-    "deploy": "gh-pages -d build/web-mobile"
+    "deploy": "npm run sw & gh-pages -d build/web-mobile",
+    "sw": "cd ./build/web-mobile && sw-precache --config=sw-precache-config.js"
   }
 }
