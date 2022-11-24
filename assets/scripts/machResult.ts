@@ -95,8 +95,8 @@ export class MachResult extends Component {
   }
 
   getDistanceText(distance: number) {
-    if (distance > 1000) return `${Math.round(distance / 1000)}km`;
-    else return `{Math.round(distance % 1000)}m`;
+    if (distance > 1) return `${Math.round(distance)}km`;
+    else return `${Math.round((distance * 1000) % 1000)}m`;
   }
 
   calcDistance(): number {
