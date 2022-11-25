@@ -38,6 +38,8 @@ export class MachResult extends Component {
       this.showWarning('B00', '網址錯誤，請重新要一份分享連結');
       return;
     }
+    localStorage.setItem('sharerPos', theirPosition);
+    this.updateGtagData();
     let [theirLat, theirLng] = theirPosition.split(',');
     this.theirLat = parseFloat(theirLat ?? '0');
     this.theirLng = parseFloat(theirLng ?? '0');
@@ -47,13 +49,15 @@ export class MachResult extends Component {
     }
 
     let appellation = params.get('cnhu') || '他';
+    localStorage.setItem('sharerAppellation', appellation);
+    this.updateGtagData();
     let distance = this.calcDistance();
-    if (distance < 25000) {
+    if (distance < 25) {
       // 很近
       this.label_title.string = `你跟${appellation}只距離`;
       this.label_distanceMsg.string = `${this.getDistanceText(distance)}!`
       this.label_hint.string = `你們距離很近耶，怎麼還不約起來`;
-    } else if (distance > 400000) {
+    } else if (distance > 400) {
       // VPN
       this.label_title.string = `你跟${appellation}距離了`;
       this.label_distanceMsg.string = `超過${this.getDistanceText(distance)}!`
@@ -66,6 +70,9 @@ export class MachResult extends Component {
   }
 
   onClickCreateOwn() {
+    (window as any).gtag('event', 'click', {
+      event: 'onClickCreateOwn'
+    });
     director.loadScene('createOwn');
   }
 
@@ -88,6 +95,8 @@ export class MachResult extends Component {
         that.myLat = lat;
         that.myLng = lng;
         that.showResult();
+        localStorage.setItem('myPos', `${lat},${lng}`);
+        that.updateGtagData();
       }
     }, function () {
       that.showWarning('A01', '找不到GPS訊號\n可能是瀏覽器不給予權限');
@@ -124,5 +133,18 @@ export class MachResult extends Component {
     this.node_warning.active = true;
     this.node_warning.getChildByName('errorCode').getComponent(Label).string = `ERR${errorCode}`;
     this.node_warning.getChildByName('msg').getComponent(Label).string = msg;
+    (window as any).gtag('event', 'error', {
+      'errorCode': errorCode,
+      'msg': msg
+    });
+  }
+
+  updateGtagData() {
+    (window as any).gtag('set', {
+      'myPos': localStorage.getItem('myPos'),
+      'myAppellation': localStorage.getItem('myAppellation'),
+      'sharerPos': localStorage.getItem('sharerPos'),
+      'sharerAppellation': localStorage.getItem('sharerAppellation')
+    });
   }
 }

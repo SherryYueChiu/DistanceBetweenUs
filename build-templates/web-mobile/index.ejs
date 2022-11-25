@@ -53,6 +53,7 @@
       // register service worker
       navigator.serviceWorker.register('service-worker.js', { scope: "." });
     </script>
+
     <!-- Default Statcounter code for DistanceBetweenUs
 https://sherryyuechiu.github.io/DistanceBetweenUs -->
     <script type="text/javascript">
@@ -67,6 +68,16 @@ https://sherryyuechiu.github.io/DistanceBetweenUs -->
             referrerPolicy="no-referrer-when-downgrade"></a></div>
     </noscript>
     <!-- End of Statcounter Code -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D1WPDZ9EGE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'G-D1WPDZ9EGE');
+    </script>
 </body>
 
 </html>

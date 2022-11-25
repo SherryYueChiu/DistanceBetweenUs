@@ -4,6 +4,7 @@ const { ccclass, property } = _decorator
 @ccclass('Entry')
 export class Entry extends Component {
   onLoad() {
+    localStorage.clear();
     if (!this.isGeolocationAvailable()) {
 
     }

@@ -35,6 +35,8 @@ export class CreateOwn extends Component {
       zwbyu: encryptedPosition,
       cnhu: this.input_enterAppellation.string || '他'
     });
+    localStorage.setItem('myAppellation',this.input_enterAppellation.string);
+    this.updateGtagData();
     url.search = param.toString();
     this.label_sharelink.string = url.toString();
     // copy to clipboard
@@ -75,11 +77,28 @@ export class CreateOwn extends Component {
     this.node_alert.active = true;
     this.node_alert.getChildByName('title').getComponent(Label).string = title;
     this.node_alert.getChildByName('msg').getComponent(Label).string = msg;
+    (window as any).gtag('event', 'alert', {
+      'title': title,
+      'msg': msg
+    });
   }
 
   showWarning(errorCode: string, msg: string) {
     this.node_warning.active = true;
     this.node_warning.getChildByName('errorCode').getComponent(Label).string = `ERR${errorCode}`;
     this.node_warning.getChildByName('msg').getComponent(Label).string = msg;
+    (window as any).gtag('event', 'error', {
+      'errorCode': errorCode,
+      'msg': msg
+    });
+  }
+
+  updateGtagData(){
+    (window as any).gtag('set', {
+      'myPos': localStorage.getItem('myPos'),
+      'myAppellation':localStorage.getItem('myAppellation'),
+      'sharerPos': localStorage.getItem('sharerPos'),
+      'sharerAppellation': localStorage.getItem('sharerAppellation')
+    });
   }
 }
